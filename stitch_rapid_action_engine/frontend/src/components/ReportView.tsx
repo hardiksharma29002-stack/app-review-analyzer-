@@ -146,7 +146,7 @@ export default function ReportView({ data }: { data: any }) {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.5, duration: 1 }}
-        className="mt-16 flex flex-col md:flex-row items-center justify-between gap-6 p-6 glass rounded-full"
+        className="mt-16 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6 p-6 glass rounded-3xl md:rounded-full"
       >
         <button 
           onClick={async () => {
@@ -189,12 +189,12 @@ export default function ReportView({ data }: { data: any }) {
               type="email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter email address..." 
-              className="w-full bg-background/50 border border-foreground/10 text-foreground rounded-full py-4 pl-6 pr-32 outline-none focus:border-primary/50 transition-colors placeholder:text-foreground/30"
+              placeholder="Enter email..." 
+              className="w-full bg-background/50 border border-foreground/10 text-foreground rounded-full py-4 pl-6 pr-28 outline-none focus:border-primary/50 transition-colors placeholder:text-foreground/30"
             />
-            <button onClick={handleSendEmail} className="absolute right-2 top-2 bottom-2 bg-primary text-background px-6 rounded-full font-bold hover:bg-primary/90 transition-colors flex items-center gap-2">
+            <button onClick={handleSendEmail} className="absolute right-2 top-2 bottom-2 bg-primary text-background px-4 md:px-6 rounded-full font-bold hover:bg-primary/90 transition-colors flex items-center gap-2">
               <Mail size={18} />
-              Send
+              <span className="hidden sm:inline">Send</span>
             </button>
           </div>
           {status && (

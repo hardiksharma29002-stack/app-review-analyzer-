@@ -93,7 +93,7 @@ export default function Hero({ onGenerate }: { onGenerate: (file: File | null) =
 
       <h1 
         ref={titleRef}
-        className="text-6xl md:text-8xl font-extrabold tracking-tight mb-6 max-w-5xl leading-tight"
+        className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6 max-w-5xl leading-tight"
         style={{ perspective: "1000px" }}
       >
         Turn User Reviews Into Product Strategy.
@@ -136,8 +136,8 @@ export default function Hero({ onGenerate }: { onGenerate: (file: File | null) =
         
         {error && <div className="text-red-400 mb-4 text-sm font-medium">{error}</div>}
 
-        <div className="flex gap-4 items-center">
-          <label className="cursor-pointer group relative flex items-center justify-center w-64 h-14 rounded-2xl glass border border-foreground/10 hover:border-primary/50 transition-colors">
+        <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center w-full max-w-sm md:max-w-none">
+          <label className="cursor-pointer group relative flex items-center justify-center w-full md:w-64 h-14 rounded-2xl glass border border-foreground/10 hover:border-primary/50 transition-colors">
             <input type="file" accept=".csv" className="hidden" onChange={handleUpload} />
             <div className="flex items-center gap-3 text-foreground/70 group-hover:text-primary transition-colors">
               <UploadCloud size={18} />
@@ -150,7 +150,7 @@ export default function Hero({ onGenerate }: { onGenerate: (file: File | null) =
           <a 
             href="/sample_reviews.csv" 
             download
-            className="group relative flex items-center justify-center w-64 h-14 rounded-2xl glass border border-foreground/10 hover:border-primary/50 transition-colors"
+            className="group relative flex items-center justify-center w-full md:w-64 h-14 rounded-2xl glass border border-foreground/10 hover:border-primary/50 transition-colors"
           >
             <div className="flex items-center gap-3 text-foreground/70 group-hover:text-primary transition-colors">
               <Download size={18} />
