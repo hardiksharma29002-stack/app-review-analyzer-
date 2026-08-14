@@ -73,11 +73,14 @@ REPORT_RECOMMENDATIONS_COUNT = 3
 QUOTE_MAX_WORDS = 50
 
 # ---------------------------------------------------------------------------
-# Email configuration (Resend API)
+# Email configuration
 # ---------------------------------------------------------------------------
-RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+SMTP_EMAIL = os.getenv("SMTP_EMAIL", "")
+SMTP_APP_PASSWORD = os.getenv("SMTP_APP_PASSWORD", "").replace(" ", "")  # Edge Case #83
 RECIPIENT_EMAIL = os.getenv("RECIPIENT_EMAIL", "")
-EMAIL_SUBJECT = "Weekly Product Pulse"
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = 465  # SSL
+EMAIL_SUBJECT = "Weekly Product Review Insights"
 EMAIL_SUBJECT = "Weekly Product Review Insights"
 
 # ---------------------------------------------------------------------------
@@ -163,14 +166,16 @@ def validate_gemini_config() -> tuple[bool, str]:
 
 def validate_email_config() -> tuple[bool, str]:
     """
-    Check if email credentials are configured.
+    Check if email SMTP credentials are configured.
 
     Returns:
         (is_valid, message)
     """
     missing = []
-    if not RESEND_API_KEY:
-        missing.append("RESEND_API_KEY")
+    if not SMTP_EMAIL:
+        missing.append("SMTP_EMAIL")
+    if not SMTP_APP_PASSWORD:
+        missing.append("SMTP_APP_PASSWORD")
     if not RECIPIENT_EMAIL:
         missing.append("RECIPIENT_EMAIL")
 

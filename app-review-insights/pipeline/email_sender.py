@@ -4,12 +4,14 @@ Email Sender Module (Phase 6).
 Sends the Weekly Product Pulse report via SMTP with a PDF attachment.
 """
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
 import sys
 from pathlib import Path
 import markdown
 import os
-import requests
-import base64
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -31,7 +33,7 @@ def get_latest_report_paths() -> tuple[Path, Path]:
 
 def send_report_email(recipient: str = None) -> bool:
     """
-    Sends the latest report to the given recipient via Resend API.
+    Sends the latest report to the given recipient via email.
     If no recipient is given, defaults to config.RECIPIENT_EMAIL.
     """
     is_valid, msg = config.validate_email_config()
@@ -50,34 +52,29 @@ def send_report_email(recipient: str = None) -> bool:
     # Convert MD to HTML for the email body
     html_body = markdown.markdown(md_text)
 
-    # Read and encode PDF
+    # Build the email
+    msg = MIMEMultipart()
+    msg["From"] = config.SMTP_EMAIL
+    msg["To"] = recipient
+    msg["Subject"] = config.EMAIL_SUBJECT
+
+    msg.attach(MIMEText(html_body, "html"))
+
     with open(latest_pdf, "rb") as f:
-        pdf_bytes = f.read()
-    pdf_b64 = base64.b64encode(pdf_bytes).decode('utf-8')
-
-    # Build the Resend API payload
-    headers = {
-        "Authorization": f"Bearer {config.RESEND_API_KEY}",
-        "Content-Type": "application/json"
-    }
-
-    payload = {
-        "from": "onboarding@resend.dev", # Resend's free tier sandbox domain
-        "to": [recipient],
-        "subject": config.EMAIL_SUBJECT,
-        "html": html_body,
-        "attachments": [
-            {
-                "filename": latest_pdf.name,
-                "content": pdf_b64
-            }
-        ]
-    }
+        pdf_part = MIMEApplication(f.read(), _subtype="pdf")
+        pdf_part.add_header(
+            "Content-Disposition", 
+            "attachment", 
+            filename=latest_pdf.name
+        )
+        msg.attach(pdf_part)
 
     try:
-        response = requests.post("https://api.resend.com/emails", json=payload, headers=headers)
-        if response.status_code not in (200, 201):
-            raise ValueError(f"Resend API Error: {response.text}")
+        with smtplib.SMTP_SSL(config.SMTP_HOST, config.SMTP_PORT) as server:
+            server.login(config.SMTP_EMAIL, config.SMTP_APP_PASSWORD)
+            server.send_message(msg)
         return True
+    except smtplib.SMTPAuthenticationError:
+        raise ValueError("Gmail authentication failed. Verify your App Password and 2-Step Verification.")
     except Exception as e:
-        raise ValueError(f"Failed to send email via Resend: {str(e)}")
+        raise ValueError(f"Failed to send email: {str(e)}")

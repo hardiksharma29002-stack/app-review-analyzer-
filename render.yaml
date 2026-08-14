@@ -11,7 +11,9 @@ services:
         sync: false
       - key: GEMINI_API_KEY
         sync: false
-      - key: RESEND_API_KEY
+      - key: SMTP_EMAIL
+        sync: false
+      - key: SMTP_APP_PASSWORD
         sync: false
       - key: RECIPIENT_EMAIL
         sync: false
