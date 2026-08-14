@@ -78,8 +78,6 @@ QUOTE_MAX_WORDS = 50
 GOOGLE_SCRIPT_URL = os.getenv("GOOGLE_SCRIPT_URL", "")
 RECIPIENT_EMAIL = os.getenv("RECIPIENT_EMAIL", "")
 EMAIL_SUBJECT = "Weekly Product Review Insights"
-EMAIL_SUBJECT = "Weekly Product Review Insights"
-EMAIL_SUBJECT = "Weekly Product Review Insights"
 
 # ---------------------------------------------------------------------------
 # Review scraper configuration
@@ -164,7 +162,7 @@ def validate_gemini_config() -> tuple[bool, str]:
 
 def validate_email_config() -> tuple[bool, str]:
     """
-    Check if Google Script Webhook is configured.
+    Check if Google Script URL is configured.
 
     Returns:
         (is_valid, message)
