@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-primary: #00D09C;
+}
+
+:root {
+  --bg: #1E1E24;
+  --fg: #ffffff;
+  --glass-bg: rgba(30, 30, 36, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --neu-dark: #121216;
+  --neu-light: #2A2A33;
+  --neu-btn-bg: #1E1E24;
+}
+
+.light-mode {
+  --bg: #F3F4F6;
+  --fg: #111827;
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --neu-dark: #D1D5DB;
+  --neu-light: #FFFFFF;
+  --neu-btn-bg: #F3F4F6;
+}
+
+body {
+  color: var(--fg);
+  background: var(--bg);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  /* Smooth color transition for anything not handled by the ripple */
+  transition: background-color 0.1s, color 0.3s ease;
+}
+
+/* Lenis smooth scroll */
+html.lenis {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  transition: background 0.3s ease, border 0.3s ease;
+}
+
+/* Neumorphic button */
+.neumorphic-btn {
+  background: var(--neu-btn-bg);
+  box-shadow: 6px 6px 12px var(--neu-dark), -6px -6px 12px var(--neu-light);
+  transition: all 0.3s ease;
+}
+.neumorphic-btn:active {
+  box-shadow: inset 6px 6px 12px var(--neu-dark), inset -6px -6px 12px var(--neu-light);
+}
+
+/* Custom Selection */
+::selection {
+  background: var(--color-primary);
+  color: #1E1E24;
+}
+
+/* Hidden scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
