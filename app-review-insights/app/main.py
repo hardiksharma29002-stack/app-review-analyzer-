@@ -52,7 +52,19 @@ async def analyze_uploaded_csv(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="Only CSV files are allowed.")
     
     try:
-        df = pd.read_csv(file.file)
+        df = None
+        last_error = None
+        encodings = ['utf-8', 'utf-16', 'utf-16le', 'iso-8859-1', 'cp1252']
+        for encoding in encodings:
+            try:
+                file.file.seek(0)
+                df = pd.read_csv(file.file, encoding=encoding)
+                break
+            except Exception as e:
+                last_error = e
+        
+        if df is None:
+            raise Exception(f"Failed to decode CSV with encodings {encodings}. Last error: {str(last_error)}")
     except Exception as e:
         print(f"Error reading CSV: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Error reading CSV: {str(e)}")
