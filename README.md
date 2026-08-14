@@ -76,6 +76,40 @@ The frontend is engineered to be as impressive as the backend. Built with **Next
 
 ---
 
+## ⚙️ Local Installation
+
+If you wish to run the pipeline locally on your own machine, follow these steps. 
+
+### 1. Backend (FastAPI)
+```bash
+cd app-review-insights
+python -m venv venv
+source venv/Scripts/activate # Windows
+pip install -r requirements.txt
+```
+Create a `.env` file in the `app-review-insights` directory with your own API keys (never commit this file):
+```env
+GROQ_API_KEY=your_groq_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+GOOGLE_SCRIPT_URL=your_google_script_webhook_url_here
+RECIPIENT_EMAIL=default_recipient@example.com
+```
+Start the backend server:
+```bash
+python -m uvicorn app.main:app --port 8000
+```
+
+### 2. Frontend (Next.js)
+In a new terminal window:
+```bash
+cd stitch_rapid_action_engine/frontend
+npm install
+npm run dev
+```
+Open `http://localhost:3000` in your browser.
+
+---
+
 <div align="center">
   <i>Built to turn noise into signal.</i>
 </div>
