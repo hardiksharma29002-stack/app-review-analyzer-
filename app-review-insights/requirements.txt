@@ -22,3 +22,6 @@ google-play-scraper>=1.2.7
 
 # Markdown to HTML (for email body rendering)
 markdown>=3.6
+
+# HTTP client for Resend API
+requests>=2.31.0
