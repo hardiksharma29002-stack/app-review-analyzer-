@@ -64,14 +64,13 @@ def send_report_email(recipient: str = None) -> bool:
     }
 
     try:
-        # Google Apps Script web apps require redirects to be followed
-        response = requests.post(config.GOOGLE_SCRIPT_URL, json=payload, allow_redirects=True)
-        if response.status_code != 200:
-            raise ValueError(f"Google Script Webhook Error: {response.status_code}")
-            
-        data = response.json()
-        if data.get("status") != "success":
-            raise ValueError(f"Google Script Webhook Failed: {data.get('message', 'Unknown error')}")
+        # Google Apps Script web apps return a 302 Redirect to serve the output.
+        # If we follow the redirect, requests changes POST to GET and it 404s.
+        # We must disable redirects and treat 302 as a success.
+        response = requests.post(config.GOOGLE_SCRIPT_URL, json=payload, allow_redirects=False)
+        
+        if response.status_code not in (200, 302):
+            raise ValueError(f"Google Script Webhook Error: {response.status_code} - Make sure URL ends in /exec")
             
         return True
     except Exception as e:
