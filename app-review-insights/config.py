@@ -88,7 +88,7 @@ EMAIL_SUBJECT = "Weekly Product Review Insights"
 GROWW_APP_ID = "com.nextbillion.groww"
 DEFAULT_SCRAPE_WEEKS = 8
 MAX_REVIEWS_CAP = 2000  # Edge Case #24: cap large datasets at scrape time
-MAX_REVIEWS_TO_ANALYZE = 100  # Cap for pipeline execution to ensure <10s LLM speed
+MAX_REVIEWS_TO_ANALYZE = 300  # Cap for pipeline execution to ensure <10s LLM speed
 
 # ---------------------------------------------------------------------------
 # STRETCH: Upload constraints
