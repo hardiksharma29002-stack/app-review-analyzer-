@@ -1,0 +1,24 @@
+# Web framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+jinja2>=3.1.4
+python-multipart>=0.0.9
+
+# Data processing
+pandas>=2.2.0
+
+# LLM
+groq>=0.11.0
+google-generativeai>=0.8.0
+
+# PDF generation
+reportlab>=4.2.0
+
+# Environment variables
+python-dotenv>=1.0.1
+
+# Review scraping (offline script only — not needed on server)
+google-play-scraper>=1.2.7
+
+# Markdown to HTML (for email body rendering)
+markdown>=3.6
