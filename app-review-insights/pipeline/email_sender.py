@@ -4,14 +4,12 @@ Email Sender Module (Phase 6).
 Sends the Weekly Product Pulse report via SMTP with a PDF attachment.
 """
 
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.application import MIMEApplication
 import sys
 from pathlib import Path
 import markdown
 import os
+import requests
+import base64
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -33,8 +31,7 @@ def get_latest_report_paths() -> tuple[Path, Path]:
 
 def send_report_email(recipient: str = None) -> bool:
     """
-    Sends the latest report to the given recipient via email.
-    If no recipient is given, defaults to config.RECIPIENT_EMAIL.
+    Sends the latest report to the given recipient via Google Apps Script Webhook.
     """
     is_valid, msg = config.validate_email_config()
     if not is_valid:
@@ -52,29 +49,30 @@ def send_report_email(recipient: str = None) -> bool:
     # Convert MD to HTML for the email body
     html_body = markdown.markdown(md_text)
 
-    # Build the email
-    msg = MIMEMultipart()
-    msg["From"] = config.SMTP_EMAIL
-    msg["To"] = recipient
-    msg["Subject"] = config.EMAIL_SUBJECT
-
-    msg.attach(MIMEText(html_body, "html"))
-
+    # Read and encode PDF
     with open(latest_pdf, "rb") as f:
-        pdf_part = MIMEApplication(f.read(), _subtype="pdf")
-        pdf_part.add_header(
-            "Content-Disposition", 
-            "attachment", 
-            filename=latest_pdf.name
-        )
-        msg.attach(pdf_part)
+        pdf_bytes = f.read()
+    pdf_b64 = base64.b64encode(pdf_bytes).decode('utf-8')
+
+    # Build the payload for the Google Apps Script Webhook
+    payload = {
+        "recipient": recipient,
+        "subject": config.EMAIL_SUBJECT,
+        "html_body": html_body,
+        "filename": latest_pdf.name,
+        "pdf_b64": pdf_b64
+    }
 
     try:
-        with smtplib.SMTP_SSL(config.SMTP_HOST, config.SMTP_PORT) as server:
-            server.login(config.SMTP_EMAIL, config.SMTP_APP_PASSWORD)
-            server.send_message(msg)
+        # Google Apps Script web apps require redirects to be followed
+        response = requests.post(config.GOOGLE_SCRIPT_URL, json=payload, allow_redirects=True)
+        if response.status_code != 200:
+            raise ValueError(f"Google Script Webhook Error: {response.status_code}")
+            
+        data = response.json()
+        if data.get("status") != "success":
+            raise ValueError(f"Google Script Webhook Failed: {data.get('message', 'Unknown error')}")
+            
         return True
-    except smtplib.SMTPAuthenticationError:
-        raise ValueError("Gmail authentication failed. Verify your App Password and 2-Step Verification.")
     except Exception as e:
-        raise ValueError(f"Failed to send email: {str(e)}")
+        raise ValueError(f"Failed to send email via Google Script: {str(e)}")
