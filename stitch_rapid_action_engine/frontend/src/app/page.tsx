@@ -31,8 +31,14 @@ export default function Home() {
       let res;
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       if (file) {
+        // Fix for Mobile OS (Android/iOS) file reading issues with fetch
+        // Forces the browser to load the file into memory first
+        const arrayBuffer = await file.arrayBuffer();
+        const blob = new Blob([arrayBuffer], { type: file.type || 'text/csv' });
+        
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", blob, file.name);
+        
         res = await fetch(`${apiUrl}/analyze/upload`, {
           method: "POST",
           body: formData,
