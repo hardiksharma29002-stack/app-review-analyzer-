@@ -245,6 +245,7 @@
 | 115 | **Long report overflows container** | Report div has fixed height | Use `overflow-y: auto` or no fixed height — let content expand. |
 | 116 | **Network error during analysis** | User loses connection mid-pipeline | Frontend: catch `fetch()` rejection. Show: "Network error. Check your connection and try again." Don't leave spinner running forever — add a 120s timeout. |
 | 117 | **Browser back button during analysis** | Navigation interrupts the pipeline | The pipeline runs server-side — browser navigation doesn't cancel it. But the user loses the result. Consider storing last result in session/file so a refresh can retrieve it. |
+| 118 | **Mobile OS file picker greys out CSV** | Android/iOS blocks selection of `.csv` due to MIME mismatch | Remove `accept=".csv"` from `<input type="file">` so users can pick any file, then validate `.csv` extension strictly in Javascript onChange handler. |
 
 ---
 

@@ -68,7 +68,7 @@ export default function Hero({ onGenerate }: { onGenerate: (file: File | null) =
       setError(null);
       
       const file = e.target.files[0];
-      if (!file.name.endsWith('.csv')) {
+      if (!file.name.toLowerCase().endsWith('.csv')) {
         setError("Please upload a valid CSV file.");
         setSelectedFile(null);
         return;
@@ -138,7 +138,7 @@ export default function Hero({ onGenerate }: { onGenerate: (file: File | null) =
 
         <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center w-full max-w-sm md:max-w-none">
           <label className="cursor-pointer group relative flex items-center justify-center w-full md:w-64 h-14 rounded-2xl glass border border-foreground/10 hover:border-primary/50 transition-colors">
-            <input type="file" accept=".csv" className="hidden" onChange={handleUpload} />
+            <input type="file" className="hidden" onChange={handleUpload} />
             <div className="flex items-center gap-3 text-foreground/70 group-hover:text-primary transition-colors">
               <UploadCloud size={18} />
               <span className="font-semibold text-sm truncate max-w-[150px]">
